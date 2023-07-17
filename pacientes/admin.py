@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Paciente, DatosMedicos, Historial, Estancia
+from .models import Paciente, DatosMedicos, Historial
 
 
 # Register your models here.
@@ -17,11 +17,8 @@ class DatosMedicosAdmin(admin.ModelAdmin):
     list_display = ['paciente', 'diagnostico', 'doctor_a_cargo', 'estado']
     list_display_links = ['paciente', 'diagnostico', 'doctor_a_cargo']
 
-@admin.register(Estancia)
-class EstanciaAdmin(admin.ModelAdmin):
-    list_display = ['nombre']
 
 @admin.register(Historial)
 class HistorialAdmin(admin.ModelAdmin):
-    list_display = ['paciente', 'estancia']
-    list_display_links = ['paciente', 'estancia']
+    list_display = ['paciente', 'tipo_estancia', 'fecha_ingreso', 'fecha_salida']
+    list_display_links = ['paciente', 'tipo_estancia', 'fecha_ingreso', 'fecha_salida']
