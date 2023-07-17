@@ -1,5 +1,7 @@
 from django.db import models
 from doctores.models import Doctor
+from censo.models import TipoEstancia
+
 
 # Create your models here.
 class Auditoria(models.Model):
@@ -35,18 +37,11 @@ class DatosMedicos(models.Model):
         return f'{self.paciente.nombre} - {self.paciente.cedula} - {self.doctor_a_cargo}'
 
 
-class Estancia(models.Model):
-    nombre = models.CharField(max_length=200)
-
-    def __str__(self):
-        return f'{self.nombre}'
-
-
 class Historial(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    estancia = models.ForeignKey(Estancia, on_delete=models.CASCADE)
-    fecha_ingreso = models.DateTimeField(null=True)
-    fecha_salida = models.DateTimeField(null=True)
+    tipo_estancia = models.ForeignKey(TipoEstancia, on_delete=models.CASCADE)
+    fecha_ingreso = models.DateTimeField()
+    fecha_salida = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.paciente.nombre} - {self.paciente.cedula}'
