@@ -23,5 +23,5 @@ class EstanciaAdmin(admin.ModelAdmin):
 
 @admin.register(Historial)
 class HistorialAdmin(admin.ModelAdmin):
-    list_display = ['paciente', 'estancia']
-    list_display_links = ['paciente', 'estancia']
+    list_display = ['paciente', 'estancia', 'fecha_ingreso', 'fecha_salida']
+    list_display_links = ['paciente', 'estancia', 'fecha_ingreso', 'fecha_salida']

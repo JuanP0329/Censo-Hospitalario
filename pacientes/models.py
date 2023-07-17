@@ -45,6 +45,8 @@ class Estancia(models.Model):
 class Historial(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     estancia = models.ForeignKey(Estancia, on_delete=models.CASCADE)
+    fecha_ingreso = models.DateTimeField(null=True)
+    fecha_salida = models.DateTimeField(null=True)
 
     def __str__(self):
         return f'{self.paciente.nombre} - {self.paciente.cedula}'
