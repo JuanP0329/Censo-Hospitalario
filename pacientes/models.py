@@ -1,6 +1,7 @@
 from django.db import models
 from doctores.models import Doctor
 from censo.models import TipoEstancia
+from django import forms
 
 
 # Create your models here.
@@ -26,6 +27,12 @@ class Paciente(Auditoria):
     def __str__(self):
         return f'{self.apellido} - {self.nombre}'
 
+    def save(
+            self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        print('Hola mundo!')
+        super().save(force_insert, force_update, using, update_fields)
+
 
 class DatosMedicos(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
@@ -38,11 +45,22 @@ class DatosMedicos(models.Model):
 
 
 class Historial(models.Model):
+    OPCIONES = [('muerto', 'Muerto'), ('vivo', 'Vivo'), ('en revision', 'En revision')]
+
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     tipo_estancia = models.ForeignKey(TipoEstancia, on_delete=models.CASCADE)
     fecha_ingreso = models.DateTimeField()
     fecha_salida = models.DateTimeField(blank=True, null=True)
+    condicion = models.CharField(max_length=20, choices=OPCIONES, blank=True, null=True)
 
     def __str__(self):
         return f'{self.paciente.nombre} - {self.paciente.cedula}'
 
+
+class HistorialForm(forms.ModelForm):
+    class Meta:
+        model = Historial
+        fields = ['condicion']
+        widgets = {
+            'condicion': forms.RadioSelect
+        }
