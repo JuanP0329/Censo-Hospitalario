@@ -1,48 +1,76 @@
+from django import forms
 from django.db import models
+from django.utils.translation import gettext as _
+
+from censo.models import StayType
 from doctores.models import Doctor
-from censo.models import TipoEstancia
 
 
-# Create your models here.
-class Auditoria(models.Model):
-    quien_creo = models.CharField(max_length=200, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(null=True, auto_now=True)
+class Auditing(models.Model):
+    who_created = models.CharField(max_length=200, null=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(null=True, auto_now=True)
 
     class Meta:
         abstract = True
 
 
-class Paciente(Auditoria):
-    nombre = models.CharField(max_length=200)
-    apellido = models.CharField(max_length=200)
-    cedula = models.IntegerField(primary_key=True)
-    fecha_nacimiento = models.DateField()
-    direccion = models.CharField(max_length=200)
-    genero = models.CharField(max_length=50)
-    nacionalidad = models.CharField(max_length=100)
-    foto = models.ImageField()
+class Patient(Auditing):
+    identification = models.IntegerField(primary_key=True)
+    photo = models.ImageField(upload_to='pictures', blank=True, null=True)
+    name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    date_born = models.DateField()
+    gender = models.CharField(max_length=50)
+    address = models.CharField(max_length=200)
+    nationality = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = _('Patient')
+        verbose_name_plural = _('Patients')
+        ordering = ['identification']
 
     def __str__(self):
-        return f'{self.apellido} - {self.nombre}'
+        return f'{self.last_name} - {self.name}'
 
 
-class DatosMedicos(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    diagnostico = models.TextField(max_length=200)
-    doctor_a_cargo = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    estado = models.BooleanField(default=False)
+class MedicalData(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    diagnosis = models.TextField(max_length=200)
+    doctor_in_charge = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f'{self.paciente.nombre} - {self.paciente.cedula} - {self.doctor_a_cargo}'
-
-
-class Historial(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    tipo_estancia = models.ForeignKey(TipoEstancia, on_delete=models.CASCADE)
-    fecha_ingreso = models.DateTimeField()
-    fecha_salida = models.DateTimeField(blank=True, null=True)
+    class Meta:
+        verbose_name = _('Medical Data')
+        verbose_name_plural = _('Medical Data')
+        ordering = ['patient']
 
     def __str__(self):
-        return f'{self.paciente.nombre} - {self.paciente.cedula}'
+        return f'{self.patient.name} - {self.patient.identification} - {self.doctor_in_charge}'
 
+
+class MedicalHistory(models.Model):
+    OPTIONS = [('dead', _('Dead')), ('live', _('Live')), ('review', _('Under Review'))]
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    stay_type = models.ForeignKey(StayType, on_delete=models.CASCADE)
+    admission_date = models.DateTimeField()
+    date_departure = models.DateTimeField(blank=True, null=True)
+    condition = models.CharField(max_length=20, choices=OPTIONS, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Medical Historial')
+        verbose_name_plural = _('Medical Historials')
+        ordering = ['patient']
+
+    def __str__(self):
+        return f'{self.patient.name} - {self.patient.identification}'
+
+
+class MedicalHistoryForm(forms.ModelForm):
+    class Meta:
+        model = MedicalHistory
+        fields = ['condition']
+        widgets = {
+            'condition': forms.RadioSelect
+        }
