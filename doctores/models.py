@@ -1,7 +1,5 @@
 from django.db import models
-
-
-# Create your models here.
+from django.utils.translation import gettext as _
 
 
 class Doctor(models.Model):
@@ -13,8 +11,8 @@ class Doctor(models.Model):
     specialty = models.ForeignKey('Specialty', on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'Doctor'
-        verbose_name_plural = 'Doctores'
+        verbose_name = _('Doctor')
+        verbose_name_plural = _('Doctors')
         ordering = ['identification']
 
     def __str__(self):
@@ -25,8 +23,8 @@ class Specialty(models.Model):
     name = models.CharField(max_length=200)
 
     class Meta:
-        verbose_name = 'Specialty'
-        verbose_name_plural = 'Specialties'
+        verbose_name = _('Specialty')
+        verbose_name_plural = _('Specialties')
         ordering = ['name']
 
     def __str__(self):

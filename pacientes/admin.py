@@ -1,24 +1,35 @@
 from django.contrib import admin
-from .models import Paciente, DatosMedicos, Historial
+from django.utils.safestring import mark_safe
+
+from .forms import PatientForm
+from .models import Patient, MedicalData, MedicalHistory
 
 
 # Register your models here.
-@admin.register(Paciente)
-class PacienteAdmin(admin.ModelAdmin):
-    list_display = ['cedula', 'nombre', 'apellido', 'genero', 'fecha_nacimiento']
-    list_display_links = ['cedula', 'nombre', 'apellido', 'genero', 'fecha_nacimiento']
-    fields = ['cedula', 'nombre', 'apellido', 'fecha_nacimiento', 'direccion', 'genero', 'nacionalidad', 'foto',
-              'quien_creo', 'fecha_creacion', 'fecha_actualizacion']
-    readonly_fields = ('fecha_creacion', 'fecha_actualizacion')
+@admin.register(Patient)
+class PatientAdmin(admin.ModelAdmin):
+    form = PatientForm
+    list_display = ['identification', 'photo', 'name', 'last_name', 'gender', 'date_born']
+    list_display_links = list_display
+    fields = ['identification', 'photo', 'photo_tag', 'name', 'last_name', 'date_born', 'address', 'gender', 'nationality',
+              'who_created', 'creation_date', 'update_date']
+    readonly_fields = ('creation_date', 'update_date', 'photo_tag')
+
+    @staticmethod
+    def photo_tag(patient):
+        if patient.photo:
+            return mark_safe('<img src="%s" width="300"/>' % patient.photo.url)
+        else:
+            return mark_safe('-')
 
 
-@admin.register(DatosMedicos)
-class DatosMedicosAdmin(admin.ModelAdmin):
-    list_display = ['paciente', 'diagnostico', 'doctor_a_cargo', 'estado']
-    list_display_links = ['paciente', 'diagnostico', 'doctor_a_cargo']
+@admin.register(MedicalData)
+class MedicalDataAdmin(admin.ModelAdmin):
+    list_display = ['patient', 'diagnosis', 'doctor_in_charge', 'status']
+    list_display_links = ['patient', 'diagnosis', 'doctor_in_charge']
 
 
-@admin.register(Historial)
-class HistorialAdmin(admin.ModelAdmin):
-    list_display = ['paciente', 'tipo_estancia', 'fecha_ingreso', 'fecha_salida', 'condicion']
-    list_display_links = ['paciente', 'tipo_estancia', 'fecha_ingreso', 'fecha_salida', 'condicion']
+@admin.register(MedicalHistory)
+class MedicalHistoryAdmin(admin.ModelAdmin):
+    list_display = ['patient', 'stay_type', 'admission_date', 'date_departure', 'condition']
+    list_display_links = list_display
