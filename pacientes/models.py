@@ -74,3 +74,16 @@ class MedicalHistoryForm(forms.ModelForm):
         widgets = {
             'condition': forms.RadioSelect
         }
+
+
+class Comorbidity(models.Model):
+    name = models.CharField(max_length=200)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Comorbidity')
+        verbose_name_plural = _('Comorbidities')
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

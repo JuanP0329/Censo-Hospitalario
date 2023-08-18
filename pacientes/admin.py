@@ -2,7 +2,13 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from .forms import PatientForm
-from .models import Patient, MedicalData, MedicalHistory
+from .models import Patient, MedicalData, MedicalHistory, Comorbidity
+
+
+class PatientComorbidityInline(admin.StackedInline):
+    model = Comorbidity
+    readonly_fields = ("id",)
+    extra = 1
 
 
 # Register your models here.
@@ -11,9 +17,11 @@ class PatientAdmin(admin.ModelAdmin):
     form = PatientForm
     list_display = ['identification', 'photo', 'name', 'last_name', 'gender', 'date_born']
     list_display_links = list_display
-    fields = ['identification', 'photo', 'photo_tag', 'name', 'last_name', 'date_born', 'address', 'gender', 'nationality',
+    fields = ['identification', 'photo', 'photo_tag', 'name', 'last_name', 'date_born', 'address', 'gender',
+              'nationality',
               'who_created', 'creation_date', 'update_date']
     readonly_fields = ('creation_date', 'update_date', 'photo_tag')
+    inlines = [PatientComorbidityInline]
 
     @staticmethod
     def photo_tag(patient):
@@ -32,4 +40,10 @@ class MedicalDataAdmin(admin.ModelAdmin):
 @admin.register(MedicalHistory)
 class MedicalHistoryAdmin(admin.ModelAdmin):
     list_display = ['patient', 'stay_type', 'admission_date', 'date_departure', 'condition']
+    list_display_links = list_display
+
+
+@admin.register(Comorbidity)
+class ComorbidityAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
     list_display_links = list_display
