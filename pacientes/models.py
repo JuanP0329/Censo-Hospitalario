@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 
 from censo.models import StayType
 from doctores.models import Doctor
+from nationality.models import Country
 
 
 class Auditing(models.Model):
@@ -23,7 +24,7 @@ class Patient(Auditing):
     date_born = models.DateField()
     gender = models.CharField(max_length=50)
     address = models.CharField(max_length=200)
-    nationality = models.CharField(max_length=100)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = _('Patient')
