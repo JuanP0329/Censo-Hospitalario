@@ -18,7 +18,7 @@ class PatientAdmin(admin.ModelAdmin):
     list_display = ['identification', 'photo', 'name', 'last_name', 'gender', 'date_born']
     list_display_links = list_display
     fields = ['identification', 'photo', 'photo_tag', 'name', 'last_name', 'date_born', 'address', 'gender',
-              'nationality',
+              'country',
               'who_created', 'creation_date', 'update_date']
     readonly_fields = ('creation_date', 'update_date', 'photo_tag')
     inlines = [PatientComorbidityInline]
