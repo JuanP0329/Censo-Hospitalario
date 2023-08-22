@@ -52,8 +52,8 @@ class MedicalData(models.Model):
 class MedicalHistory(models.Model):
     OPTIONS = [('dead', _('Dead')), ('live', _('Live')), ('review', _('Under Review'))]
 
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     stay_type = models.ForeignKey(StayType, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     admission_date = models.DateTimeField()
     date_departure = models.DateTimeField(blank=True, null=True)
     condition = models.CharField(max_length=20, choices=OPTIONS, blank=True, null=True)

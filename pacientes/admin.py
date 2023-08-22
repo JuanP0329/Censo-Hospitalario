@@ -4,7 +4,6 @@ from django.utils.safestring import mark_safe
 from .forms import PatientForm
 from .models import Patient, MedicalData, MedicalHistory, Comorbidity
 
-
 class PatientComorbidityInline(admin.StackedInline):
     model = Comorbidity
     readonly_fields = ("id",)
@@ -39,7 +38,7 @@ class MedicalDataAdmin(admin.ModelAdmin):
 
 @admin.register(MedicalHistory)
 class MedicalHistoryAdmin(admin.ModelAdmin):
-    list_display = ['patient', 'stay_type', 'admission_date', 'date_departure', 'condition']
+    list_display = ['stay_type', 'patient', 'admission_date', 'date_departure', 'condition']
     list_display_links = list_display
 
 
