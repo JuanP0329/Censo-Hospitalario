@@ -20,6 +20,7 @@ class Doctor(models.Model):
 
 
 class Specialty(models.Model):
+    objects = None
     name = models.CharField(max_length=200)
 
     class Meta:
