@@ -15,6 +15,7 @@ class DoctorAdmin(admin.ModelAdmin):
     fields = ['identification', 'photo', 'photo_tag', 'name', 'last_name', 'email', 'specialty']
     readonly_fields = ['photo_tag']
     search_fields = ['identification', 'name', 'last_name']
+    list_filter = ['specialty__name']
 
     @staticmethod
     def photo_tag(doctor):
